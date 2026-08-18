@@ -1,0 +1,132 @@
+# -----------------------------------------------------------------------------
+# OpenDHFS
+# Git ignore rules
+# -----------------------------------------------------------------------------
+
+# Python bytecode / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Logs / temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+
+# -----------------------------------------------------------------------------
+# FORENSIC EVIDENCE
+#
+# Source evidence and recovered private material must never be committed.
+# -----------------------------------------------------------------------------
+
+*.001
+*.E01
+*.e01
+*.Ex01
+*.ex01
+*.AFF
+*.aff
+*.AFF4
+*.aff4
+*.dd
+*.raw
+*.img
+
+# Raw/reconstructed elementary video streams
+*.h264
+*.264
+*.h265
+*.265
+*.hevc
+
+# Recovered/exported media
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.dav
+
+# Case directories / run output
+Case_*/
+case_*/
+runs/
+RUN_*/
+run_*/
+
+# Recovery output
+recovery_output/
+recovered/
+exports/
+artifacts/
+work/
+tmp/
+temp/
+
+# Local databases generated during analysis
+*.db
+*.sqlite
+*.sqlite3
+
+# Local environment configuration / secrets
+.env
+.env.*
+!.env.example
+
+# Keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local forensic manifests that may contain case-specific information
+local_manifest*
+case_manifest*
+evidence_manifest*
+
+# -----------------------------------------------------------------------------
+# Explicitly allow repository test fixtures.
+#
+# Binary fixtures intended for publication should live under tests/fixtures/
+# and must contain only synthetic, sanitized, public, or redistributable data.
+# -----------------------------------------------------------------------------
+
+!tests/
+!tests/fixtures/
+!tests/fixtures/**
