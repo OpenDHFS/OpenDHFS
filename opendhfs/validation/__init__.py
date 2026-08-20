@@ -1,0 +1,1 @@
+"""Decoder-based validation for OpenDHFS recovery candidates."""
