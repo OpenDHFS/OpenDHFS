@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 import struct
 import subprocess
@@ -296,4 +297,75 @@ def test_scan_to_analyze_end_to_end(tmp_path: Path):
         3,
         "H265",
         0,
+    )
+    
+    validate_cmd = [
+        sys.executable,
+        str(ROOT / "opendhfs_validate.py"),
+        str(case),
+    ]
+
+    validate_result = subprocess.run(
+        validate_cmd,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+
+    assert validate_result.returncode == 0, (
+        validate_result.stdout
+        + "\n"
+        + validate_result.stderr
+    )
+
+    validation_db = case / "validation.sqlite"
+    validation_summary = case / "validation_summary.json"
+
+    assert validation_db.exists()
+    assert validation_summary.exists()
+
+    report_cmd = [
+        sys.executable,
+        str(ROOT / "opendhfs_report.py"),
+        str(case),
+    ]
+
+    report_result = subprocess.run(
+        report_cmd,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+
+    assert report_result.returncode == 0, (
+        report_result.stdout
+        + "\n"
+        + report_result.stderr
+    )
+
+    report_json = case / "report.json"
+    report_md = case / "report.md"
+
+    assert report_json.exists()
+    assert report_md.exists()
+
+    report = json.loads(
+        report_json.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert (
+        report["report_policy"]["evidence_upgrade"]
+        is False
+    )
+
+    assert (
+        report["report_policy"]["camera_channel_assertion"]
+        is False
+    )
+
+    assert (
+        report["conclusion"]["validated_video_targets"]
+        >= 0
     )
