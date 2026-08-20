@@ -181,3 +181,119 @@ def test_scan_to_analyze_end_to_end(tmp_path: Path):
     assert physical_sets == 1
     assert strong == 3
     assert residual == 0
+
+    plan_cmd = [
+        sys.executable,
+        str(ROOT / "opendhfs_plan.py"),
+        str(case),
+    ]
+
+    plan_result = subprocess.run(
+        plan_cmd,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+
+    assert plan_result.returncode == 0, (
+        plan_result.stdout + "\n" + plan_result.stderr
+    )
+
+    plan_db = case / "recovery_plan.sqlite"
+    plan_json = case / "recovery_plan.json"
+
+    assert plan_db.exists()
+    assert plan_json.exists()
+
+    conn = sqlite3.connect(plan_db)
+
+    targets = conn.execute(
+        """
+        SELECT
+            tier,
+            strategy,
+            start_offset,
+            end_offset_exclusive,
+            record_count
+        FROM recovery_targets
+        ORDER BY priority
+        """
+    ).fetchall()
+
+    conn.close()
+
+    assert targets == [
+        (
+            "TIER_A_ANCHORED",
+            "PHYSICAL_CONTINUITY",
+            30,
+            len(blob),
+            3,
+        )
+    ]
+
+    recover_cmd = [
+        sys.executable,
+        str(ROOT / "opendhfs_recover.py"),
+        str(case),
+        str(image),
+    ]
+
+    recover_result = subprocess.run(
+        recover_cmd,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+
+    assert recover_result.returncode == 0, (
+        recover_result.stdout
+        + "\n"
+        + recover_result.stderr
+    )
+
+    recovery_db = case / "recovery.sqlite"
+    recovery_summary = case / "recovery_summary.json"
+
+    assert recovery_db.exists()
+    assert recovery_summary.exists()
+
+    candidate = (
+        case
+        / "recovery"
+        / "TGT-000001"
+        / "candidate.h265"
+    )
+
+    assert candidate.exists()
+
+    recovered = candidate.read_bytes()
+
+    assert recovered.startswith(
+        b"\x00\x00\x00\x01"
+    )
+
+    assert recovered.count(
+        b"\x00\x00\x00\x01"
+    ) == 3
+
+    conn = sqlite3.connect(recovery_db)
+
+    result = conn.execute("""
+        SELECT
+            status,
+            payload_records,
+            codec,
+            source_modified
+        FROM recovery_results
+        WHERE target_id = 'TGT-000001'
+    """).fetchone()
+
+    conn.close()
+
+    assert result == (
+        "RECOVERED_PAYLOAD",
+        3,
+        "H265",
+        0,
+    )
