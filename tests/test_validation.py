@@ -73,3 +73,16 @@ def test_partial_decode():
     )
 
     assert result == "PARTIAL_DECODE"
+
+def test_decoder_error_with_zero_frames_is_rejected():
+    result = classify_validation(
+        candidate_exists=True,
+        bitstream_recognized=True,
+        decoder_opened=True,
+        frames_decoded=0,
+        decoder_exit_code=183,
+        width=None,
+        height=None,
+    )
+
+    assert result == "DECODER_REJECTED"

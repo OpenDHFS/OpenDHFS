@@ -25,6 +25,12 @@ def classify_validation(
     if not decoder_opened:
         return "DECODER_REJECTED"
 
+    if (
+        frames_decoded <= 0
+        and decoder_exit_code not in (0, None)
+        ):
+        return "DECODER_REJECTED"
+
     if frames_decoded <= 0:
         return "NO_DECODED_FRAMES"
 
