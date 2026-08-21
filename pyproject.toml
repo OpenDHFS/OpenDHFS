@@ -50,6 +50,7 @@ Repository = "https://github.com/OpenDHFS/OpenDHFS"
 Issues = "https://github.com/OpenDHFS/OpenDHFS/issues"
 
 [project.scripts]
+opendhfs = "opendhfs.cli:main"
 opendhfs-scan = "opendhfs_scan:main"
 opendhfs-analyze = "opendhfs_analyze:main"
 opendhfs-plan = "opendhfs_plan:main"
