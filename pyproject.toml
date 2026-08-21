@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "opendhfs"
+version = "0.1.0"
+description = "Open-source forensic recovery toolkit for DHFS/DHAV discovery, evidence-guided video recovery, decoder validation, and forensic reporting."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+
+authors = [
+    { name = "Gabriel Hernández", email = "opendhfs@proton.me" }
+]
+
+keywords = [
+    "forensics",
+    "dvr",
+    "nvr",
+    "dahua",
+    "dhfs",
+    "dhav",
+    "hevc",
+    "h265",
+    "video-recovery",
+    "digital-forensics"
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security",
+    "Topic :: System :: Recovery Tools"
+]
+
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/OpenDHFS/OpenDHFS"
+Repository = "https://github.com/OpenDHFS/OpenDHFS"
+Issues = "https://github.com/OpenDHFS/OpenDHFS/issues"
+
+[project.scripts]
+opendhfs-scan = "opendhfs_scan:main"
+opendhfs-analyze = "opendhfs_analyze:main"
+opendhfs-plan = "opendhfs_plan:main"
+opendhfs-recover = "opendhfs_recover:main"
+opendhfs-validate = "opendhfs_validate:main"
+opendhfs-report = "opendhfs_report:main"
+
+[tool.setuptools]
+py-modules = [
+    "opendhfs_scan",
+    "opendhfs_analyze",
+    "opendhfs_plan",
+    "opendhfs_recover",
+    "opendhfs_validate",
+    "opendhfs_report"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["opendhfs*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
