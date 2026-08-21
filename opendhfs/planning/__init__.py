@@ -1,1 +1,1 @@
-"""OpenDHFS structural analysis."""
+"""Evidence-guided recovery planning for OpenDHFS."""
